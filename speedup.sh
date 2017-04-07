@@ -9,10 +9,10 @@ while [ "$1" != "" ]; do
 			speedup="$1"
 			;;
 		-t | --tiny )
-			profile="-profile=atsc_720p_2997"
+			profile="-profile atsc_720p_2997"
 			;;
 		--teensy )
-			profile="-profile=vcd_ntsc"
+			profile="-profile vcd_ntsc"
 			;;
 		-d | --dest )
 			shift
@@ -42,6 +42,6 @@ for srcfile in "$srcdir"/*; do
 	dstfile="${srcfile##*/}"
 	dstfile="${dstfile%.*}.mp4"
 	echo Converting $srcfile to $dstdir/$dstfile...
-	echo melt $profile -consumer "avformat:$dstdir/$dstfile" "timewarp:$speedup:$srcfile"
+	melt $profile -consumer "avformat:$dstdir/$dstfile" "timewarp:$speedup:$srcfile"
 done
 
