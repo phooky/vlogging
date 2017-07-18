@@ -25,23 +25,23 @@ while [ "$1" != "" ]; do
 	shift
 done
 
+if [ ! -d "$srcdir" ]; then
+	echo "You must provide a source directory of video files to convert."
+	exit 1
+fi
+
 if [ -z "$dstdir" ]; then
-	dstdir="$srcdir-x$speedup"
+	dstdir="${srcdir%/}-x$speedup"
 fi
 
 if [ ! -d "$dstdir" ]; then
 	mkdir -p "$dstdir"
 fi
 
-if [ ! -d "$srcdir" ]; then
-	echo "You must provide a source directory of video files to convert."
-	exit 1
-fi
-
 for srcfile in "$srcdir"/*; do
 	dstfile="${srcfile##*/}"
 	dstfile="${dstfile%.*}.mp4"
 	echo Converting $srcfile to $dstdir/$dstfile...
-	melt $profile -consumer "avformat:$dstdir/$dstfile" "timewarp:$speedup:$srcfile"
+	melt $profile -consumer "avformat:$dstdir/$dstfile" threads=8 real_time=-4 "timewarp:$speedup:$srcfile"
 done
 
